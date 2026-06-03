@@ -150,7 +150,7 @@
     .map-section { text-align: center; padding: 10px 20px 0; }
     .map-section h2 { font-size: 1.4em; color: var(--gold); margin-bottom: 8px; }
     .map-section .tip { font-size: 0.8em; color: var(--text-dimmer); margin-bottom: 5px; }
-    .map-container { margin: 0 auto; position: relative; overflow: visible; }
+    .map-container { margin: 0 auto; position: relative; overflow: visible; max-width:1100px; }
     .map-container svg { width: 100%; height: auto; }
     #usa-map path { fill: var(--map-fill); stroke: var(--map-stroke); stroke-width: 0.8; transition: fill 0.3s, stroke 0.3s; }
     #usa-map path.active { fill: var(--map-active); }
@@ -488,7 +488,7 @@
     <p class="tip">Golden Jackets across USA</p>
     <div class="map-container">
       <!-- Connection lines between pins -->
-      <img src="assets/usa-map-regions.svg" alt="USA Map" style="max-width:700px;width:100%;height:auto;margin:0 auto;display:block;">
+      <img src="assets/usa-map-regions.svg" alt="USA Map" style="width:100%;max-width:1100px;height:auto;margin:0 auto;display:block;">
       <div class="map-pin" style="top:28%;left:13%" onclick="filterByState('OR')"><span class="pin-icon">📍</span><span class="pin-count gold-count">1</span></div>
     </div>
     
