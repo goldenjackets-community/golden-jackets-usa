@@ -368,15 +368,15 @@
     <div class="logo">GJ <span>USA</span> <a href="#" target="_blank" style="margin-left:8px;opacity:0.7;transition:opacity 0.3s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.7"><svg width="16" height="16" viewBox="0 0 24 24" fill="#1DB954"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.6 0 12 0zm5.5 17.3c-.2.3-.6.4-1 .2-2.7-1.6-6-2-10-1.1-.4.1-.7-.2-.8-.5-.1-.4.2-.7.5-.8 4.3-1 8.1-.6 11.1 1.2.3.2.4.6.2 1zm1.5-3.3c-.3.4-.8.5-1.2.3-3-1.9-7.7-2.4-11.3-1.3-.4.1-.9-.1-1-.6-.1-.4.1-.9.6-1 4.1-1.3 9.2-.7 12.6 1.5.3.2.5.7.3 1.1zm.1-3.4c-3.7-2.2-9.7-2.4-13.2-1.3-.5.2-1.1-.1-1.2-.6-.2-.5.1-1.1.6-1.2 4-1.2 10.6-1 14.8 1.5.5.3.6.9.4 1.4-.3.4-.9.6-1.4.2z"/></svg></a> <a href="#" target="_blank" style="margin-left:8px;opacity:0.7;transition:opacity 0.3s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.7"><svg width="20" height="14" viewBox="0 0 20 14"><rect width="20" height="14" rx="3" fill="#C0C0C0"/><polygon points="8,3 8,11 14,7" fill="#FF0000"/></svg></a></div>
     <div class="ticker">
       <div class="ticker-content">
-        <span>🏆 1 Members</span>
+        <span>🏆 2 Members</span>
         <span>📜 12+ Certifications</span>
-        <span>📍 1 Regions</span>
+        <span>📍 2 States</span>
         <span class="welcome-new">🆕</span>
         <span>🌐 goldenjackets.us</span>
         <span>🇺🇸 Celebrating American AWS Excellence</span>
-        <span>🏆 1 Members</span>
+        <span>🏆 2 Members</span>
         <span>📜 12+ Certifications</span>
-        <span>📍 1 Regions</span>
+        <span>📍 2 States</span>
         <span class="welcome-new">🆕</span>
         <span>🌐 goldenjackets.us</span>
         <span>🇺🇸 Celebrating American AWS Excellence</span>
@@ -563,7 +563,7 @@ Place this code in the empty space below. */
   .or:hover { fill: #FFD700 !important; }
 </style></path>
 
-<path class="co" d="m 374.6,323.3 -16.5,-1 -51.7,-4.8 -52.6,-6.5 11.5,-88.3 44.9,5.7 37.5,3.4 33.1,2.4 -1.4,22.1 z">
+<path class="co" style="fill:#B8860B" d="m 374.6,323.3 -16.5,-1 -51.7,-4.8 -52.6,-6.5 11.5,-88.3 44.9,5.7 37.5,3.4 33.1,2.4 -1.4,22.1 z">
 <title>Colorado</title>
 <style>
   .state { fill: #2d2d4e; stroke: #444; stroke-width: 1; cursor: pointer; transition: fill 0.3s; }
@@ -1157,6 +1157,7 @@ Place this code in the empty space below. */
 <text x="802" y="252" text-anchor="middle" fill="#aaa" font-size="12" font-weight="600" style="pointer-events:none">DC</text>
 </svg>
       <div class="map-pin" style="top:22%;left:8%" onclick="filterByState('OR')"><span class="pin-icon">📍</span><span class="pin-count gold-count">1</span></div>
+      <div class="map-pin" style="top:35%;left:30%" onclick="filterByState('CO')"><span class="pin-icon">📍</span><span class="pin-count gold-count">1</span></div>
     </div>
     
   </section>
@@ -1226,21 +1227,48 @@ Place this code in the empty space below. */
 
     <div class="members-grid">
 
-      <div class="member-card founder" data-state="OR">
+      <div class="member-card" data-state="OR">
         <span class="card-number">#1</span>
         <img src="assets/members/noor-sabahi.jpg" alt="Noor Sabahi" class="photo">
         <h3>Noor Sabahi</h3>
         <div class="location">Portland, Oregon, USA</div>
         <div class="tags">
           <span class="tag">Golden Jacket</span>
-          <span class="tag">Chapter Lead</span>
-          <span class="tag">12/12 Certifications</span>
+          <span class="tag">Member</span>
         </div>
         <div class="certified">All 12 AWS Certifications ✓</div>
         <div class="socials">
-          <a href="https://www.linkedin.com/in/gulias/" target="_blank">in</a>
+          <a href="https://www.linkedin.com/in/noor-sabahi/" target="_blank">in</a>
         </div>
       </div>
+      <div class="member-card" data-state="CO">
+        <span class="card-number">#2</span>
+        <img src="assets/members/jenn-bergstrom.jpg" alt="Jenn Bergstrom" class="photo">
+        <h3>Jenn Bergstrom</h3>
+        <div class="location">Denver, Colorado, USA</div>
+        <div class="tags">
+          <span class="tag">Golden Jacket</span>
+          <span class="tag">Member</span>
+        </div>
+        <div class="certified">All 12 AWS Certifications ✓</div>
+        <div class="socials">
+          <a href="https://www.linkedin.com/in/jenn-bergstrom" target="_blank">in</a>
+        </div>
+      </div>
+      <div class="member-card" style="border:2px dashed rgba(255,215,0,0.5);background:rgba(255,215,0,0.03);">
+        <span class="card-number">?</span>
+        <div class="avatar">🇺🇸</div>
+        <h3 style="color:var(--gold);">Chapter Lead — Open Position</h3>
+        <div class="location">United States</div>
+        <div class="tags">
+          <span class="tag" style="background:rgba(255,215,0,0.2);color:var(--gold);border:1px solid var(--gold);">Seeking Candidates</span>
+        </div>
+        <div class="certified" style="color:var(--text-muted);">Are you a Golden Jacket in the USA? Lead this chapter!</div>
+        <div class="socials">
+          <a href="https://www.linkedin.com/company/golden-jackets-usa" target="_blank">Apply →</a>
+        </div>
+      </div>
+    <!-- END_GOLDEN_JACKETS -->
     </div>
   </section>
   <!-- Alumni Section -->
@@ -1249,6 +1277,7 @@ Place this code in the empty space below. */
     <p style="color:var(--text-muted);font-size:0.9em;margin-bottom:30px;">Former Golden Jacket holders — renew your expired certifications to reclaim your Golden Jacket status</p>
     <div class="members-grid">
       <!-- Alumni cards go here -->
+    <!-- END_ALUMNI -->
     </div>
   </section>
 
@@ -1258,6 +1287,7 @@ Place this code in the empty space below. */
     <p style="color:var(--text-muted);font-size:0.9em;margin-bottom:30px;">Professionals with 10 or more AWS certifications — on the final stretch to the Golden Jacket</p>
     <div class="members-grid">
       <!-- Challenger cards go here -->
+    <!-- END_CHALLENGERS -->
     </div>
   </section>
 
@@ -1659,9 +1689,7 @@ Place this code in the empty space below. */
       var name=document.getElementById('sponsorName').value;
       var company=document.getElementById('sponsorCompany').value;
       var email=document.getElementById('sponsorEmail').value;
-      var tier=document.getElementById('sponsorTier').value;
       
-      if(!tier){s.innerHTML='<span style="color:#f44336">Please select an option. If you want to apply as a Golden Jacket, Alumni, or Challenger, use the <a href="#" onclick="document.getElementById(\'applyForm\').classList.add(\'open\');return false;" style="color:#FFD700;text-decoration:underline;">application form below</a>.</span>';return;}
       if(!name||!email){s.innerHTML='<span style="color:#f44336">Please fill in name and email</span>';return;}
       s.innerHTML='<span style="color:var(--gold)">Sending...</span>';
       fetch('https://kqiq2bltjd.execute-api.us-east-1.amazonaws.com/sponsor',{method:'POST',headers:{'Content-Type':'application/json'},
