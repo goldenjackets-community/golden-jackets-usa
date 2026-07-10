@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Golden Jackets Brazil - Admin Console</title>
+  <title>Golden Jackets USA - Admin Console</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Segoe UI', Arial, sans-serif; background: #0a0a1a; color: #e0e0e0; }
@@ -37,7 +37,7 @@
 </head>
 <body>
   <nav>
-    <div class="logo">GJ <span>Brazil</span> · Admin</div>
+    <div class="logo">GJ <span>USA</span> · Admin</div>
     <div class="nav-links">
       <a href="/members.html">← Back to Lounge</a>
       <a href="/">Main Site</a>
@@ -54,11 +54,6 @@
         <div class="icon">📋</div>
         <div class="label">List Users</div>
         <div class="desc">View all Cognito users and status</div>
-      </div>
-      <div class="tool-btn" id="btnCreateChapter" style="display:none;" onclick="showCreateChapter()">
-        <div class="icon">🌐</div>
-        <div class="label">Create Chapter</div>
-        <div class="desc">Create new country chapter (Global Admin)</div>
       </div>
       <div class="tool-btn" id="btnAllChapters" style="display:none;" onclick="listAllUsers()">
         <div class="icon">🌍</div>
@@ -102,12 +97,12 @@
         <div class="label">Restore</div>
         <div class="desc">Restore site from latest backup</div>
       </div>
-      <a class="tool-btn" href="https://github.com/ricardogulias/golden-jackets-brazil/pulls" target="_blank">
+      <a class="tool-btn global-only" style="display:none;" href="https://github.com/goldenjackets-community/golden-jackets-usa/pulls" target="_blank">
         <div class="icon">🔀</div>
         <div class="label">Open PRs</div>
         <div class="desc">Review pending pull requests</div>
       </a>
-      <a class="tool-btn" href="https://github.com/ricardogulias/golden-jackets-brazil/actions" target="_blank">
+      <a class="tool-btn global-only" style="display:none;" href="https://github.com/goldenjackets-community/golden-jackets-usa/actions" target="_blank">
         <div class="icon">🚀</div>
         <div class="label">Deployments</div>
         <div class="desc">GitHub Actions status</div>
@@ -133,20 +128,15 @@
         <div class="label">Metrics</div>
         <div class="desc">Members & articles stats</div>
       </div>
-      <div class="tool-btn" onclick="showAuthLogs()">
-        <div class="icon">🔐</div>
-        <div class="label">Auth Logs</div>
-        <div class="desc">Login activity & sessions</div>
+      <div class="tool-btn" onclick="moveMember()">
+        <div class="icon">🔄</div>
+        <div class="label">Move Member</div>
+        <div class="desc">Change category (Golden/Alumni/Challenger)</div>
       </div>
-      <div class="tool-btn" onclick="promoteChallenger()">
-        <div class="icon">🏆</div>
-        <div class="label">Promote</div>
-        <div class="desc">Challenger → Golden Jacket</div>
-      </div>
-      <div class="tool-btn" onclick="window.open('/assets/co-founder-guide.pdf')">
+      <div class="tool-btn" onclick="window.open('/assets/chapter-leader-guide.pdf')">
         <div class="icon">📖</div>
         <div class="label">Operations Guide</div>
-        <div class="desc">Download Co-Founder Guide (PDF)</div>
+        <div class="desc">Download Chapter Leader Guide (PDF)</div>
       </div>
       <div class="tool-btn" onclick="showBacklog()">
         <div class="icon">📋</div>
@@ -158,7 +148,7 @@
         <div class="label">Architecture</div>
         <div class="desc">Live infrastructure diagram</div>
       </div>
-      <a class="tool-btn" href="https://github.com/ricardogulias/golden-jackets-brazil/blob/main/README.md" target="_blank">
+      <a class="tool-btn" href="https://github.com/goldenjackets-community/golden-jackets-usa/blob/master/README.md" target="_blank">
         <div class="icon">📖</div>
         <div class="label">README</div>
         <div class="desc">Project documentation</div>
@@ -199,7 +189,7 @@
     <div class="output" id="adminOutput"></div>
   </div>
 
-  <footer>Golden Jackets Brazil © 2026 · Admin Console</footer>
+  <footer>Golden Jackets USA © 2026 · Admin Console</footer>
 
 <script src="/config.js"></script>
 <script>
@@ -228,12 +218,12 @@ async function adminCall(action, extra) {
   out.innerHTML = '<span style="color:#FFD700;">Loading...</span>';
   try {
     var body = Object.assign({action: action}, extra || {});
-    var resp = await fetch(ADMIN_API, {method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+sessionStorage.getItem('gj_token')}, body: JSON.stringify(Object.assign(body, {chapter: 'brazil'}))});
+    var resp = await fetch(ADMIN_API, {method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+sessionStorage.getItem('gj_token')}, body: JSON.stringify(Object.assign(body, {chapter: GJ_CONFIG.CHAPTER}))});
     // If unauthorized, try refresh token
     if (resp.status === 401 || resp.status === 403) {
       var refreshed = await refreshSession();
       if (refreshed) {
-        resp = await fetch(ADMIN_API, {method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+sessionStorage.getItem('gj_token')}, body: JSON.stringify(Object.assign(body, {chapter: 'brazil'}))});
+        resp = await fetch(ADMIN_API, {method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+sessionStorage.getItem('gj_token')}, body: JSON.stringify(Object.assign(body, {chapter: GJ_CONFIG.CHAPTER}))});
       } else {
         out.innerHTML = '<span style="color:#f44336;">Session expired. Please <a href="/members.html" style="color:#FFD700;">log in again</a>.</span>';
         return null;
@@ -322,7 +312,7 @@ async function showBacklog() {
   out.style.display = 'block';
   out.innerHTML = '<span style="color:#FFD700;">Loading backlog...</span>';
   try {
-    var resp = await fetch('https://raw.githubusercontent.com/ricardogulias/golden-jackets-brazil/main/BACKLOG.md?t='+Date.now());
+    var resp = await fetch('https://raw.githubusercontent.com/goldenjackets-community/golden-jackets-usa/master/BACKLOG.md?t='+Date.now());
     var md = await resp.text();
     var lines = md.split('\n');
     var html = '';
@@ -380,60 +370,6 @@ async function exportCSV() {
 }
 
 // Metrics dashboard
-async function showAuthLogs() {
-  var output = document.getElementById('adminOutput'); output.style.display='block';
-  output.innerHTML = '<h3>🔐 Auth Logs</h3><p style="color:#FFD700;">Loading...</p>';
-  try {
-    var resp = await fetch('https://uf3x2i7xr7rziz4nswkmsd4k5i0dunaj.lambda-url.us-east-1.on.aws/', {
-      method: 'POST', headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({action:'get_logs', chapter: window._gjChapter || '', caller_email: sessionStorage.getItem('gj_email') || ''})
-    });
-    var data = await resp.json();
-    var html = '<h3>🔐 Auth Logs — Lounge Activity</h3>';
-
-    // Active now
-    html += '<h4 style="color:#4CAF50;">🟢 Active Now (' + data.active_now.length + ')</h4>';
-    if (data.active_now.length) {
-      html += '<table><tr><th>Email</th><th>Since</th></tr>';
-      data.active_now.forEach(function(u){ html += '<tr><td>'+u.email+'</td><td>'+u.since.substring(11,19)+' UTC</td></tr>'; });
-      html += '</table>';
-    } else { html += '<p style="color:#999;">No one online right now</p>'; }
-
-    // Today
-    html += '<h4 style="color:#FFD700;">📅 Today (' + data.today.date + ') — ' + data.today.users.length + ' users</h4>';
-    if (data.today.users.length) {
-      html += '<table><tr><th>Email</th><th>Logins</th></tr>';
-      data.today.users.forEach(function(u){ html += '<tr><td>'+u.email+'</td><td>'+u.logins+'</td></tr>'; });
-      html += '</table>';
-    } else { html += '<p style="color:#999;">No logins today</p>'; }
-
-    // This month
-    html += '<h4 style="color:#64B5F6;">📆 This Month (' + data.month.month + ') — ' + data.month.users.length + ' users</h4>';
-    if (data.month.users.length) {
-      html += '<table><tr><th>Email</th><th>Logins</th></tr>';
-      data.month.users.sort(function(a,b){return b.logins-a.logins;});
-      data.month.users.forEach(function(u){ html += '<tr><td>'+u.email+'</td><td>'+u.logins+'</td></tr>'; });
-      html += '</table>';
-    }
-
-    // All time leaderboard
-    html += '<h4 style="color:#CE93D8;">🏆 All Time Leaderboard</h4>';
-    if (data.all_time.length) {
-      html += '<table><tr><th>#</th><th>Email</th><th>Total Logins</th><th>First Login</th><th>Last Login</th></tr>';
-      data.all_time.forEach(function(u,i){ html += '<tr><td>'+(i+1)+'</td><td>'+u.email+'</td><td>'+u.total+'</td><td>'+(u.first||'').substring(0,10)+'</td><td>'+(u.last||'').substring(0,16).replace('T',' ')+'</td></tr>'; });
-      html += '</table>';
-    }
-
-    // Never logged in (from Cognito - we know 8 FORCE_CHANGE_PASSWORD)
-    html += '<h4 style="color:#ef5350;">⚠️ Never Logged In (FORCE_CHANGE_PASSWORD)</h4>';
-    html += '<p style="color:#999;font-size:0.85em;">Check via Admin Panel → List Users for pending accounts</p>';
-
-    output.innerHTML = html;
-  } catch(e) {
-    output.innerHTML = '<h3>🔐 Auth Logs</h3><p style="color:red;">Error: '+e.message+'</p>';
-  }
-}
-
 async function showMetrics() {
   var data = await adminCall('list-users');
   if (!data || !data.users) return;
@@ -473,6 +409,26 @@ async function promoteChallenger() {
   var out = document.getElementById('adminOutput');
   out.style.display = 'block';
   out.innerHTML = '<strong style="color:#FF9800;">⚠️ Reminder:</strong> To complete the promotion, manually move the member card in index.html from the Challengers section to Golden Jackets section, update the tags, and push to main.<br><br><strong style="color:#4CAF50;">Member ' + email + ' flagged for promotion.</strong>';
+}
+
+async function moveMember() {
+  var name = prompt('Enter the member name (exactly as shown on the site):');
+  if (!name) return;
+  var target = prompt('Move to which category?\n\n1 = Golden Jacket\n2 = Alumni\n3 = Challenger\n\nEnter 1, 2 or 3:');
+  if (!target || !['1','2','3'].includes(target)) { alert('Invalid option'); return; }
+  var categories = {'1':'golden','2':'alumni','3':'challenger'};
+  var labels = {'1':'Golden Jacket','2':'Alumni','3':'Challenger'};
+  var cat = categories[target];
+  if (!confirm('Move "' + name + '" to ' + labels[target] + '?')) return;
+  var out = document.getElementById('adminOutput');
+  out.style.display = 'block';
+  out.innerHTML = '<span style="color:#FFD700;">Moving member...</span>';
+  var data = await adminCall('move-member', {name: name, target: cat});
+  if (data && data.message) {
+    out.innerHTML = '<span style="color:#4CAF50;">✅ ' + data.message + '</span>';
+  } else if (data && data.error) {
+    out.innerHTML = '<span style="color:#f44336;">❌ ' + data.error + '</span>';
+  }
 }
 
 // Load partner click stats
@@ -518,7 +474,8 @@ function filterPartnerStats(){
 }
 // Global admin: show All Chapters button
 var GLOBAL_ADMINS = ['ricardo.gulias@goldenjacketsbrazil.com'];
-if (GLOBAL_ADMINS.includes(email)) { var btn = document.getElementById('btnAllChapters'); if(btn) btn.style.display=''; ; var btn2 = document.getElementById("btnCreateChapter"); if(btn2) btn2.style.display=""; }
+if(GLOBAL_ADMINS.includes(email)){document.querySelectorAll(".global-only").forEach(function(el){el.style.display="block"});}
+if (GLOBAL_ADMINS.includes(email)) { var btn = document.getElementById('btnAllChapters'); if(btn) btn.style.display=''; }
 
 async function listAllUsers() {
   var body = {action:'list-users'};
@@ -557,7 +514,7 @@ async function uploadPhoto() {
   var name = document.getElementById('photoName').value.trim();
   var file = document.getElementById('photoFile').files[0];
   var msg = document.getElementById('photoMsg');
-  if (!name || !file) { msg.innerHTML = '<span style="color:#f44336;">Please select a member and a photo.</span>'; return; }
+  if (!name || !file) { msg.innerHTML = '<span style="color:#f44336;">Please enter name and select a photo.</span>'; return; }
   if (file.size > 5000000) { msg.innerHTML = '<span style="color:#f44336;">Photo too large. Max 5MB.</span>'; return; }
   msg.innerHTML = '<span style="color:#FFD700;">Uploading...</span>';
   var reader = new FileReader();
@@ -581,19 +538,27 @@ async function listPRs(type) {
   if (!data || !data.prs) return;
   var prs = data.prs.filter(function(p){ return p.type === type; });
   var out = document.getElementById('adminOutput');
-  if (prs.length === 0) { out.innerHTML = '<span style="color:#4CAF50;">✅ No pending ' + (type==='member'?'applications':'articles') + '!</span>'; return; }
+  if (prs.length === 0) {
+    out.innerHTML = '<span style="color:#4CAF50;">✅ No pending ' + (type==='member'?'applications':'articles') + '!</span>';
+    return;
+  }
   var h = '<strong style="color:#FFD700;">' + (type==='member'?'📋 Pending Applications':'📝 Pending Articles') + ' (' + prs.length + ')</strong><br><br>';
   prs.forEach(function(pr){
     h += '<div style="background:#1a1a30;padding:16px;border-radius:8px;margin-bottom:12px;border:1px solid #2a2a45;">';
     h += '<strong style="color:#fff;font-size:1.05em;">' + pr.title + '</strong><br>';
     h += '<span style="color:#888;font-size:0.8em;">By ' + pr.author + ' · ' + pr.created_at.split('T')[0] + '</span>';
+    // Parse body for URL and Summary
     if (pr.body) {
       var urlMatch = pr.body.match(/\*\*URL:\*\*\s*(https?:\/\/[^\s\n]+)/);
       var summaryMatch = pr.body.match(/\*\*Summary:\*\*\s*([^\n]+)/);
       var linkedinMatch = pr.body.match(/\*\*LinkedIn:\*\*\s*(https?:\/\/[^\s\n]+)/);
       if (linkedinMatch) { h += '<br><a href="' + linkedinMatch[1] + '" target="_blank" style="color:#0077B5;font-size:0.9em;text-decoration:none;font-weight:600;display:inline-block;margin-top:6px;">🔗 LinkedIn Profile ↗</a>'; }
-      if (urlMatch) { h += '<br><a href="' + urlMatch[1] + '" target="_blank" style="color:#2196F3;font-size:1.1em;text-decoration:none;font-weight:600;display:inline-block;margin-top:6px;">🔗 Read full article ↗</a>'; }
-      if (summaryMatch) { h += '<p style="color:#ccc;font-size:0.85em;margin:8px 0;padding:8px;background:#151528;border-radius:4px;border-left:3px solid #FFD700;">' + summaryMatch[1] + '</p>'; }
+      if (urlMatch) {
+        h += '<br><a href="' + urlMatch[1] + '" target="_blank" style="color:#2196F3;font-size:1.1em;text-decoration:none;font-weight:600;display:inline-block;margin-top:6px;">🔗 Read full article ↗</a>';
+      }
+      if (summaryMatch) {
+        h += '<p style="color:#ccc;font-size:0.85em;margin:8px 0;padding:8px;background:#151528;border-radius:4px;border-left:3px solid #FFD700;">' + summaryMatch[1] + '</p>';
+      }
     }
     h += '<div style="margin-top:10px;">';
     h += '<button onclick="mergePR(' + pr.number + ')" style="padding:6px 16px;background:#4CAF50;border:none;border-radius:4px;color:#fff;font-weight:700;cursor:pointer;margin-right:8px;">✅ Approve & ' + (type==='member'?'Add':'Publish') + '</button>';
@@ -605,114 +570,16 @@ async function listPRs(type) {
 async function mergePR(number) {
   if (!confirm('Are you sure you want to approve PR #' + number + '?')) return;
   var data = await adminCall('merge-pr', {pr_number: number});
-  if (data && data.message) { document.getElementById('adminOutput').innerHTML = '<span style="color:#4CAF50;">✅ ' + data.message + '</span><br><span style="color:#888;">Site will update in ~1 minute.</span>'; }
+  if (data && data.message) {
+    document.getElementById('adminOutput').innerHTML = '<span style="color:#4CAF50;">✅ ' + data.message + '</span><br><span style="color:#888;">Site will update in ~1 minute.</span>';
+  }
 }
 async function rejectPR(number) {
   var reason = prompt('Reason for rejection (will be sent to the author):');
   if (!reason) return;
   var data = await adminCall('close-pr', {pr_number: number, reason: reason});
-  if (data && data.message) { document.getElementById('adminOutput').innerHTML = '<span style="color:#f44336;">❌ ' + data.message + '</span>'; }
-}
-</script>
-<script>
-function fileToBase64(file) {
-  return new Promise((resolve) => {
-    var reader = new FileReader();
-    reader.onload = function(e) { resolve(e.target.result.split(",")[1]); };
-    reader.readAsDataURL(file);
-  });
-}
-
-function pollChapterStatus(code, el) {
-  var attempts = 0;
-  var interval = setInterval(async function() {
-    attempts++;
-    if (attempts > 30) { clearInterval(interval); el.innerHTML += '<br><span style="color:#FFA500;">Timeout — check GitHub Actions manually.</span>'; return; }
-    try {
-      var resp = await fetch(GJ_CONFIG.ADMIN_API, {
-        method: 'POST',
-        headers: {'Content-Type':'application/json','Authorization':'Bearer '+sessionStorage.getItem('gj_token')},
-        body: JSON.stringify({action: 'chapter-status', code: code})
-      });
-      var data = await resp.json();
-      if (data.status === 'success') {
-        clearInterval(interval);
-        var ns = (data.nameservers || '').split(',').map(function(n){ return '<li>'+n.trim()+'</li>'; }).join('');
-        el.innerHTML = '<div style="background:#1a1a30;border:1px solid #4CAF50;border-radius:8px;padding:16px;margin-top:12px;">' +
-          '<h4 style="color:#4CAF50;margin-bottom:8px;">🎉 Chapter Created!</h4>' +
-          '<table style="font-size:0.85em;color:#ccc;">' +
-          '<tr><td style="padding:4px 12px 4px 0;color:#888;">CloudFront</td><td><a href="https://'+data.cloudfront_domain+'" target="_blank" style="color:#FFD700;">'+data.cloudfront_domain+'</a></td></tr>' +
-          '<tr><td style="padding:4px 12px 4px 0;color:#888;">Repo</td><td><a href="https://github.com/'+data.repo+'" target="_blank" style="color:#FFD700;">'+data.repo+'</a></td></tr>' +
-          '<tr><td style="padding:4px 12px 4px 0;color:#888;">Domain</td><td>'+data.domain+'</td></tr>' +
-          '</table>' +
-          '<p style="color:#FFD700;margin-top:12px;font-size:0.85em;">📋 Nameservers (send to Chapter Leader):</p>' +
-          '<ul style="color:#ccc;font-size:0.8em;margin-left:16px;">'+ns+'</ul>' +
-          '<p style="color:#888;margin-top:12px;font-size:0.8em;">Next: Upload photo + jacket → Leader points DNS → Add to global map</p>' +
-          '</div>';
-      } else {
-        el.querySelector('span:last-child').textContent = '⏳ Waiting... ('+attempts*10+'s)';
-      }
-    } catch(e) {}
-  }, 10000);
-}
-function showCreateChapter() {
-  var out = document.getElementById('adminOutput');
-  out.style.display = 'block';
-  out.innerHTML = `
-    <h3 style="color:#FFD700;margin-bottom:12px;">🌐 Create New Chapter</h3>
-    <div style="display:grid;gap:8px;max-width:400px;">
-      <input id="cc_country" placeholder="Country (e.g. Germany)" style="padding:8px;background:#1a1a30;border:1px solid #333;border-radius:6px;color:#fff;">
-      <input id="cc_code" placeholder="Code lowercase (e.g. germany)" style="padding:8px;background:#1a1a30;border:1px solid #333;border-radius:6px;color:#fff;">
-      <input id="cc_domain" placeholder="Domain (e.g. goldenjackets.de)" style="padding:8px;background:#1a1a30;border:1px solid #333;border-radius:6px;color:#fff;">
-      <input id="cc_flag" placeholder="Flag emoji (e.g. 🇩🇪)" style="padding:8px;background:#1a1a30;border:1px solid #333;border-radius:6px;color:#fff;">
-      <input id="cc_leader" placeholder="Leader name" style="padding:8px;background:#1a1a30;border:1px solid #333;border-radius:6px;color:#fff;">
-      <input id="cc_email" placeholder="Leader email" style="padding:8px;background:#1a1a30;border:1px solid #333;border-radius:6px;color:#fff;">
-      <input id="cc_city" placeholder="Leader city" style="padding:8px;background:#1a1a30;border:1px solid #333;border-radius:6px;color:#fff;">
-      <input id="cc_linkedin" placeholder="Leader LinkedIn URL" style="padding:8px;background:#1a1a30;border:1px solid #333;border-radius:6px;color:#fff;">
-      <input id="cc_simplemaps" placeholder="SimpleMaps 2-letter (e.g. de)" style="padding:8px;background:#1a1a30;border:1px solid #333;border-radius:6px;color:#fff;">
-      <label style="color:#888;font-size:0.8em;margin-top:4px;">Leader Photo</label>
-      <input type="file" id="cc_photo" accept="image/*" style="padding:8px;background:#1a1a30;border:1px solid #333;border-radius:6px;color:#fff;">
-      <label style="color:#888;font-size:0.8em;margin-top:4px;">Jacket Image</label>
-      <input type="file" id="cc_jacket" accept="image/*" style="padding:8px;background:#1a1a30;border:1px solid #333;border-radius:6px;color:#fff;">
-      <button onclick="createChapter()" style="padding:10px;background:linear-gradient(135deg,#FFD700,#B8860B);border:none;border-radius:6px;color:#151528;font-weight:700;cursor:pointer;margin-top:8px;">🚀 Create Chapter</button>
-    </div>
-    <div id="cc_status" style="margin-top:12px;"></div>
-  `;
-}
-
-async function createChapter() {
-  var photoFile = document.getElementById("cc_photo").files[0];
-  var jacketFile = document.getElementById("cc_jacket").files[0];
-  var photoB64 = "", jacketB64 = "";
-  if (photoFile) { photoB64 = await fileToBase64(photoFile); }
-  if (jacketFile) { jacketB64 = await fileToBase64(jacketFile); }
-  var s = document.getElementById('cc_status');
-  s.innerHTML = '<span style="color:#FFD700;">⏳ Triggering infrastructure creation...</span>';
-  try {
-    var resp = await fetch(GJ_CONFIG.ADMIN_API, {
-      method: 'POST',
-      headers: {'Content-Type':'application/json','Authorization':'Bearer '+sessionStorage.getItem('gj_token')},
-      body: JSON.stringify({
-        action: 'create-chapter',
-        country: document.getElementById('cc_country').value,
-        code: document.getElementById('cc_code').value,
-        domain: document.getElementById('cc_domain').value,
-        flag: document.getElementById('cc_flag').value,
-        leader_name: document.getElementById('cc_leader').value,
-        leader_email: document.getElementById('cc_email').value,
-        leader_city: document.getElementById('cc_city').value,
-        leader_linkedin: document.getElementById('cc_linkedin').value,
-        simplemaps_code: document.getElementById("cc_simplemaps").value,
-        photo_base64: photoB64,
-        jacket_base64: jacketB64
-      })
-    });
-    var data = await resp.json();
-    if (data.error) { s.innerHTML = '<span style="color:#f44336;">❌ ' + data.error + '</span>'; }
-    else { 
-      s.innerHTML = '<span style="color:#4CAF50;">✅ ' + data.message + '</span><br><span style="color:#888;">⏳ Polling for results...</span>';
-      pollChapterStatus(document.getElementById('cc_code').value, s);
-    }
-  } catch(e) { s.innerHTML = '<span style="color:#f44336;">❌ Error: ' + e.message + '</span>'; }
+  if (data && data.message) {
+    document.getElementById('adminOutput').innerHTML = '<span style="color:#f44336;">❌ ' + data.message + '</span>';
+  }
 }
 </script>
