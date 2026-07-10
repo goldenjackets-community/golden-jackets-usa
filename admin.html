@@ -473,7 +473,7 @@ function filterPartnerStats(){
   document.getElementById('partnerStats').innerHTML = html;
 }
 // Global admin: show All Chapters button
-var GLOBAL_ADMINS = ['ricardo.gulias@goldenjacketsbrazil.com'];
+var GLOBAL_ADMINS = ['ricardo.gulias@goldenjacketsbrazil.com', 'aws42@icloud.com'];
 if(GLOBAL_ADMINS.includes(email)){document.querySelectorAll(".global-only").forEach(function(el){el.style.display="block"});}
 if (GLOBAL_ADMINS.includes(email)) { var btn = document.getElementById('btnAllChapters'); if(btn) btn.style.display=''; }
 
