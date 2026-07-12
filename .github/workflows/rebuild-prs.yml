@@ -1,0 +1,85 @@
+name: Rebuild remaining PRs after merge
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [master]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  rebuild:
+    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.title, 'New Member:')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Rebuild open PRs to avoid conflicts
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          echo "🔄 Rebuilding remaining PRs after merge of #${{ github.event.pull_request.number }}"
+          
+          # List open PRs
+          OPEN_PRS=$(gh pr list --json number,headRefName,title,body --jq '.[] | @base64')
+          
+          if [ -z "$OPEN_PRS" ]; then
+            echo "✅ No open PRs to rebuild"
+            exit 0
+          fi
+          
+          for pr_b64 in $OPEN_PRS; do
+            PR_NUM=$(echo "$pr_b64" | base64 -d | jq -r '.number')
+            PR_BRANCH=$(echo "$pr_b64" | base64 -d | jq -r '.headRefName')
+            PR_TITLE=$(echo "$pr_b64" | base64 -d | jq -r '.title')
+            PR_BODY=$(echo "$pr_b64" | base64 -d | jq -r '.body')
+            
+            echo "📋 Rebuilding PR #$PR_NUM: $PR_TITLE"
+            
+            # Get files from PR
+            FILES=$(gh pr diff "$PR_NUM" --name-only 2>/dev/null)
+            if [ -z "$FILES" ]; then
+              echo "  ⚠️ No files in PR, skipping"
+              continue
+            fi
+            
+            # Close old PR
+            gh pr close "$PR_NUM" --comment "🔄 Auto-rebuilding to avoid conflicts after merge of #${{ github.event.pull_request.number }}" 2>/dev/null
+            
+            # Create new branch from fresh master
+            NEW_BRANCH="${PR_BRANCH}-r${{ github.event.pull_request.number }}"
+            git checkout master
+            git pull origin master
+            git checkout -b "$NEW_BRANCH"
+            
+            # Cherry-pick the PR's changes (get from old branch)
+            git checkout "origin/$PR_BRANCH" -- $FILES 2>/dev/null || true
+            
+            if git diff --cached --quiet && git diff --quiet; then
+              echo "  ⚠️ No changes to rebuild, skipping"
+              git checkout master
+              git branch -D "$NEW_BRANCH"
+              continue
+            fi
+            
+            git add -A
+            git commit -m "$PR_TITLE" --allow-empty 2>/dev/null
+            git push origin "$NEW_BRANCH" 2>/dev/null
+            
+            # Create new PR
+            gh pr create --title "$PR_TITLE" --body "$PR_BODY
+
+_Rebuilt automatically after PR merge to avoid conflicts._" --base master --head "$NEW_BRANCH" 2>/dev/null
+            
+            # Delete old branch
+            git push origin --delete "$PR_BRANCH" 2>/dev/null || true
+            
+            echo "  ✅ Rebuilt as $NEW_BRANCH"
+            git checkout master
+          done
+          
+          echo "🎉 All PRs rebuilt successfully"
