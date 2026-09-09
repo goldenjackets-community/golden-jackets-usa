@@ -71,9 +71,7 @@ jobs:
             git push origin "$NEW_BRANCH" 2>/dev/null
             
             # Create new PR
-            gh pr create --title "$PR_TITLE" --body "$PR_BODY
-
-_Rebuilt automatically after PR merge to avoid conflicts._" --base master --head "$NEW_BRANCH" 2>/dev/null
+            gh pr create --title "$PR_TITLE" --body "$PR_BODY"$'\n\n'"_Rebuilt automatically after PR merge to avoid conflicts._" --base master --head "$NEW_BRANCH" 2>/dev/null
             
             # Delete old branch
             git push origin --delete "$PR_BRANCH" 2>/dev/null || true
